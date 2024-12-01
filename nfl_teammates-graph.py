@@ -17,6 +17,30 @@ class Graph:
         self.adjacency_list[player1].append((player2, weight))
         self.adjacency_list[player2].append((player1, weight))
 
+    def dijkstra_shortest_path(self, start, target):
+        # Find the shortest path using Dijkstra's algorithm
+        import heapq
+
+        heap = [(0, start, [start])]  # (distance, current node, path)
+        visited = set()
+        node_visits = 0  # Count visited nodes
+
+        while heap:
+            current_distance, current_node, path = heapq.heappop(heap)
+            node_visits += 1
+
+            if current_node == target:
+                return path, node_visits
+
+            if current_node not in visited:
+                visited.add(current_node)
+
+                for neighbor, weight in self.adjacency_list.get(current_node, []):
+                    if neighbor not in visited:
+                        heapq.heappush(heap, (current_distance + weight, neighbor, path + [neighbor]))
+
+        return None, node_visits
+
 def load_data(file_path):
     # Load the roster data from the CSV
     rosters = pd.read_csv(file_path)
