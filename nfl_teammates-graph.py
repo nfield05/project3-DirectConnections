@@ -41,6 +41,27 @@ class Graph:
 
         return None, node_visits
 
+    def bfs_shortest_path(self, start, target):
+        # Find the shortest path using BFS
+        queue = deque([(start, [start])])
+        visited = set()
+        node_visits = 0  # Count visited nodes
+
+        while queue:
+            current, path = queue.popleft()
+            node_visits += 1
+
+            if current == target:
+                return path, node_visits
+
+            if current not in visited:
+                visited.add(current)
+                for neighbor, _ in self.adjacency_list.get(current, []):
+                    if neighbor not in visited:
+                        queue.append((neighbor, path + [neighbor]))
+
+        return None, node_visits
+
 def load_data(file_path):
     # Load the roster data from the CSV
     rosters = pd.read_csv(file_path)
