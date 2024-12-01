@@ -1,0 +1,75 @@
+/* App.css */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin: 20px 0;
+}
+
+.input-section {
+  margin: 60px auto;
+}
+
+.player-input {
+  width: 600px; /* Increase this value for a longer text field */
+  padding: 10px; /* Adjust padding for spacing */
+  font-size: 16px; /* Ensure text size is readable */
+  border: 1px solid #ccc; /* add a border */
+  border-radius: 5px; /* smooth corners */
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+  margin-bottom: 20px; /* spacing */
+}
+
+
+.player-input input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.player-input button {
+  background-color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button {
+  background-color: #ddd;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.connection-result {
+  margin-top: 3px;
+}
+
+.connection-path {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  font-size: 1.5rem;
+  margin: 10px 0;
+}
+
+.connection-details {
+  display: flex;
+  justify-content: space-around;
+  margin: 100px 0;
+}
+
+.connection-step {
+  text-align: center;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 10px;
+}
