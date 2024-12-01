@@ -16,3 +16,11 @@ class Graph:
             self.adjacency_list[player2] = []
         self.adjacency_list[player1].append((player2, weight))
         self.adjacency_list[player2].append((player1, weight))
+
+def load_data(file_path):
+    # Load the roster data from the CSV
+    rosters = pd.read_csv(file_path)
+    print("Data Loaded")
+    print(rosters.head())
+    print(rosters.info())
+    return rosters
