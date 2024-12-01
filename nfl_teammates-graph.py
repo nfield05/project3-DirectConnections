@@ -108,3 +108,55 @@ def get_path_data(path, rosters):
         else:
             print(f"No direct shared team/season data for {player1} and {player2}.")
 
+def compare_algorithms(graph, rosters):
+    # Compare BFS and Dijkstra's shortest path algorithms with metrics
+    try:
+        source = input("Enter the source player ID for shortest path: ")
+        target = input("Enter the target player ID for shortest path: ")
+
+        # BFS (Unweighted)
+        start_time = time.time()
+        bfs_path, bfs_visited_nodes = graph.bfs_shortest_path(source, target)
+        bfs_time = time.time() - start_time
+        print("\nBFS Metrics:")
+        if bfs_path:
+            print(f"Path Length: {len(bfs_path) - 1}")
+            print(f"Visited Nodes: {bfs_visited_nodes}")
+            print(f"Execution Time: {bfs_time:.6f} seconds")
+            get_path_data(bfs_path, rosters)
+        else:
+            print("No path found using BFS.")
+
+        # Dijkstra (Weighted)
+        start_time = time.time()
+        dijkstra_path, dijkstra_visited_nodes = graph.dijkstra_shortest_path(source, target)
+        dijkstra_time = time.time() - start_time
+        print("\nDijkstra Metrics:")
+        if dijkstra_path:
+            print(f"Path Length: {len(dijkstra_path) - 1}")
+            print(f"Visited Nodes: {dijkstra_visited_nodes}")
+            print(f"Execution Time: {dijkstra_time:.6f} seconds")
+            get_path_data(dijkstra_path, rosters)
+        else:
+            print("No path found using Dijkstra's algorithm.")
+
+    except Exception as e:
+        print(f"Error during analysis: {e}")
+
+
+def main():
+    # File path to the dataset
+    file_path = "nfl_rosters.csv"
+
+    # Load the data
+    rosters = load_data(file_path)
+
+    # Build the graph
+    graph = build_graph(rosters)
+
+    # Compare
+    compare_algorithms(graph, rosters)
+
+
+if __name__ == "__main__":
+    main()
