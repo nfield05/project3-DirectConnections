@@ -33,33 +33,34 @@ if "page" not in st.session_state:
 
 # Navigation Functions
 def go_to_explore(player1, player2):
-    """Navigate to the explore page."""
+    """Navigate to the explore page with player stats."""
     st.session_state.explore_data = {"player1": player1, "player2": player2}
     st.session_state.page = "explore"
 
 def reset_app():
     """Reset the app to its initial state."""
-    st.session_state.bfs_results = None
-    st.session_state.dijkstra_results = None
-    st.session_state.explore_data = None
-    st.session_state.page = "home"
+    for key in st.session_state.keys():
+        del st.session_state[key]  # Clear all session state variables
+    st.session_state.page = "home"  # Set page back to home
+    st.query_params = {}  # Reset query parameters
+
+
 
 # Main UI
 if st.session_state.page == "home":
     st.title("NFL Direct Connections")
 
-    # Searchable input for Source and Target Players
-    source_player_name = st.selectbox("Search and Select Source Player Name:", options=player_names, help="Start typing the player's name.")
-    target_player_name = st.selectbox("Search and Select Target Player Name:", options=player_names, help="Start typing the player's name.")
+    # Input Fields for Players
+    source_player_name = st.selectbox("Search and Select Source Player Name:", options=player_names)
+    target_player_name = st.selectbox("Search and Select Target Player Name:", options=player_names)
 
-    # Convert names to IDs
     source_player_id = player_mapping.get(source_player_name, None)
     target_player_id = player_mapping.get(target_player_name, None)
 
-    # Algorithm Buttons
-    col1, col2 = st.columns(2)
-
+    # Algorithm Buttons and Results
     if source_player_id and target_player_id:
+        col1, col2 = st.columns(2)
+
         with col1:
             if st.button("Run BFS Algorithm"):
                 start_time = time.time()
@@ -90,7 +91,7 @@ if st.session_state.page == "home":
                 else:
                     st.error("No path found using Dijkstra.")
 
-        # Display Results
+        # BFS Results
         if st.session_state.bfs_results:
             st.markdown("## BFS Algorithm Results:")
             results = st.session_state.bfs_results
@@ -98,8 +99,7 @@ if st.session_state.page == "home":
             st.write(f"**Visited Nodes:** {results['visited_nodes']}")
             st.write(f"**Execution Time:** {results['execution_time']:.6f} seconds")
 
-            # Display detailed path with "Explore Connection" buttons
-            st.markdown("### Path Details (BFS):")
+            # Path Details
             for i in range(len(results['path']) - 1):
                 player1_id = results['path'][i]
                 player2_id = results['path'][i + 1]
@@ -115,9 +115,10 @@ if st.session_state.page == "home":
                     team = common_team.iloc[0]['team']
                     year = common_team.iloc[0]['season']
                     st.write(f"{player1_name} played with {player2_name} on the {year} {team}.")
-                    if st.button(f"Explore Connection {i + 1}", key=f"explore_{i}"):
+                    if st.button(f"Explore Connection {i + 1} (BFS)", key=f"bfs_explore_{i}"):
                         go_to_explore(player1_name, player2_name)
 
+        # Dijkstra Results
         if st.session_state.dijkstra_results:
             st.markdown("## Dijkstra Algorithm Results:")
             results = st.session_state.dijkstra_results
@@ -125,8 +126,7 @@ if st.session_state.page == "home":
             st.write(f"**Visited Nodes:** {results['visited_nodes']}")
             st.write(f"**Execution Time:** {results['execution_time']:.6f} seconds")
 
-            # Display detailed path with "Explore Connection" buttons
-            st.markdown("### Path Details (Dijkstra):")
+            # Path Details
             for i in range(len(results['path']) - 1):
                 player1_id = results['path'][i]
                 player2_id = results['path'][i + 1]
@@ -142,19 +142,26 @@ if st.session_state.page == "home":
                     team = common_team.iloc[0]['team']
                     year = common_team.iloc[0]['season']
                     st.write(f"{player1_name} played with {player2_name} on the {year} {team}.")
-                    if st.button(f"Explore Connection {i + 1}", key=f"explore_{i}"):
+                    if st.button(f"Explore Connection {i + 1} (Dijkstra)", key=f"dijkstra_explore_{i}"):
                         go_to_explore(player1_name, player2_name)
 
+        # Reset Button
+        if st.button("Try a New Connection?"):
+            reset_app()
+
 elif st.session_state.page == "explore":
+    # Explore Page
     explore_data = st.session_state.explore_data
     if explore_data:
         player1 = explore_data["player1"]
         player2 = explore_data["player2"]
+
         st.title("Explore Connection")
-        st.write(f"### {player1}'s Stats:")
+        st.markdown(f"### {player1}'s Stats:")
         st.write(rosters[rosters["player_name"] == player1])
-        st.write(f"### {player2}'s Stats:")
+        st.markdown(f"### {player2}'s Stats:")
         st.write(rosters[rosters["player_name"] == player2])
 
-    if st.button("Back to Results"):
+    # Back to Results
+    if st.button("Back to Results", key="back_to_results"):
         st.session_state.page = "home"
