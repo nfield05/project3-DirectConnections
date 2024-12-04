@@ -55,6 +55,29 @@ def reset_app():
         del st.session_state[key]  # Clear all session state variables
     st.session_state.page = "home"  # Set page back to home
     st.query_params = {}  # Reset query parameters
+def generate_insights(rosters):
+    st.markdown("## Insights Dashboard")
+
+    # Most Connected Players
+    st.markdown("### Most Connected Players")
+    connections = rosters.groupby("player_id").size().sort_values(ascending=False).head(10)
+    player_names = [id_to_name_mapping.get(pid, pid) for pid in connections.index]
+    insights_df = pd.DataFrame({"Player": player_names, "Connections": connections.values})
+    st.dataframe(insights_df)
+
+    # Teams with the Most Players
+    st.markdown("### Teams with the Most Players")
+    team_counts = rosters.groupby("team").size().sort_values(ascending=False).head(10)
+    st.bar_chart(team_counts)
+
+    # Longest Careers
+    st.markdown("### Players with Longest Careers")
+    career_lengths = rosters.groupby("player_id")["season"].nunique().sort_values(ascending=False).head(10)
+    career_df = pd.DataFrame({
+        "Player": [id_to_name_mapping.get(pid, pid) for pid in career_lengths.index],
+        "Seasons": career_lengths.values
+    })
+    st.dataframe(career_df)
 
 # Main UI
 if st.session_state.page == "home":
@@ -158,6 +181,8 @@ if st.session_state.page == "home":
         # Reset Button
         if st.button("Try a New Connection?"):
             reset_app()
+        if st.sidebar.checkbox("Show Insights Dashboard"):
+            generate_insights(rosters)
 
 elif st.session_state.page == "explore":
     # Explore Page
