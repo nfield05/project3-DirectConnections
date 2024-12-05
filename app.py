@@ -28,12 +28,12 @@ except FileNotFoundError:
     st.error(f"The file `{file_path}` was not found. Please ensure the file exists.")
     st.stop()
 
-# Create player mappings
+# Create player mappings for the search bar
 player_mapping = rosters[['player_name', 'player_id']].dropna().drop_duplicates().set_index('player_name').to_dict()['player_id']
 id_to_name_mapping = rosters[['player_name', 'player_id']].dropna().drop_duplicates().set_index('player_id').to_dict()['player_name']
 player_names = list(player_mapping.keys())
 
-# Initialize session state
+
 if "bfs_results" not in st.session_state:
     st.session_state.bfs_results = None
 if "dijkstra_results" not in st.session_state:
@@ -43,7 +43,7 @@ if "explore_data" not in st.session_state:
 if "page" not in st.session_state:
     st.session_state.page = "home"
 
-# Navigation Functions
+# Navigation buttons
 def go_to_explore(player1, player2):
     """Navigate to the explore page with player stats."""
     st.session_state.explore_data = {"player1": player1, "player2": player2}
@@ -83,7 +83,7 @@ def generate_insights(rosters):
 if st.session_state.page == "home":
     st.title("NFL Direct Connections")
 
-    # Input Fields for Players
+    # Input players here
     source_player_name = st.selectbox("Search and Select Source Player Name:", options=player_names)
     target_player_name = st.selectbox("Search and Select Target Player Name:", options=player_names)
 
@@ -197,6 +197,5 @@ elif st.session_state.page == "explore":
         st.markdown(f"### {player2}'s Stats:")
         st.write(rosters[rosters["player_name"] == player2])
 
-    # Back to Results
     if st.button("Back to Results", key="back_to_results"):
         st.session_state.page = "home"
