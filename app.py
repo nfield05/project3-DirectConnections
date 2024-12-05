@@ -178,7 +178,7 @@ if st.session_state.page == "home":
                     if st.button(f"Explore Connection {i + 1} (Dijkstra)", key=f"dijkstra_explore_{i}"):
                         go_to_explore(player1_name, player2_name)
 
-        # Reset Button
+
         if st.button("Try a New Connection?"):
             reset_app()
         if st.sidebar.checkbox("Show Insights Dashboard"):
