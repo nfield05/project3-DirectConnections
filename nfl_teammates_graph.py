@@ -21,7 +21,7 @@ class Graph:
         # Find the shortest path using Dijkstra's algorithm
         import heapq
 
-        heap = [(0, start, [start])]  # (distance, current node, path)
+        heap = [(0, start, [start])]
         visited = set()
         node_visits = 0  # Count visited nodes
 
@@ -114,7 +114,7 @@ def compare_algorithms(graph, rosters):
         source = input("Enter the source player ID for shortest path: ")
         target = input("Enter the target player ID for shortest path: ")
 
-        # BFS (Unweighted)
+        # BFS
         start_time = time.time()
         bfs_path, bfs_visited_nodes = graph.bfs_shortest_path(source, target)
         bfs_time = time.time() - start_time
@@ -127,7 +127,7 @@ def compare_algorithms(graph, rosters):
         else:
             print("No path found using BFS.")
 
-        # Dijkstra (Weighted)
+        # Dijkstra
         start_time = time.time()
         dijkstra_path, dijkstra_visited_nodes = graph.dijkstra_shortest_path(source, target)
         dijkstra_time = time.time() - start_time
